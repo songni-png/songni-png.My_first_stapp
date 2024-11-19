@@ -1,14 +1,50 @@
 import streamlit as st
-import streamlit.components.v1 as components
+import pandas as pd
+import folium
+from streamlit_folium import folium_static
+import geopandas as gpd
+
+# 데이터프레임 불러오기 (인코딩 문제 해결)
+df_korea_birthrate = pd.read_csv('data/전국_시군구_합계출산율__모의_연령별_출산율_20241116181155.csv', header=3, encoding='utf-8')
+
+# '행정구' 열의 공백 제거 및 데이터 타입 변환
+df_korea_birthrate['행정구'] = df_korea_birthrate['행정구'].str.strip().astype(str)
+
+# NaN 값 확인 및 처리
+df_korea_birthrate['출생률'] = df_korea_birthrate['출생률'].fillna(0)
+
+# GeoJSON 파일 불러오기
+gdf_korea_sido = gpd.read_file('data/your_geojson_file.geojson', encoding='euc-kr')
+
+# 기본 지도 생성하기
+korea_map = folium.Map(
+    location=[37, 126],
+    zoom_start=7,
+    tiles='cartodbpositron'  # 타일 레이어
+)
+
+# 제목 추가하기
+title = '전국 시군구 출생률'  # 타이틀
+title_html = f'<h3 align="center" style="font-size:20px"><b>{title}</b></h3>'
+korea_map.get_root().html.add_child(folium.Element(title_html))
+
+# Choropleth map 그리기
+folium.Choropleth(
+    geo_data=gdf_korea_sido,  # GeoJSON 파일
+    data=df_korea_birthrate,  # 데이터프레임
+    columns=['행정구', '출생률'],  # 열
+    key_on='feature.properties.행정구',  # key
+    fill_color='BuPu',  # 색상 Blue-Purple
+    fill_opacity=0.7,  # 투명도 조정
+    line_opacity=0.3
+).add_to(korea_map)
 
 # Streamlit 앱 설정
 st.title('전국 시군구 출생률')
+st.markdown(title_html, unsafe_allow_html=True)
 
-# HTML 파일 읽기
-with open('data/korea_map.html', 'r', encoding='utf-8') as f:
-    html_content = f.read()
-
-components.html(html_content,height=600)
+# Folium 지도 출력
+folium_static(korea_map)
 
 
 '# 이것은 제목입니다. : Magic 명령어'
