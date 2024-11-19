@@ -6,79 +6,69 @@ import geopandas as gpd
 import os
 import glob
 
-# 전국 시군구 출생률 데이터 불러오기
-df_korea_birthrate = pd.read_csv('data\전국_시군구_출생아수__합계출산율_20241119114124.csv', header=3, encoding='utf-8')
+# 데이터 경로 설정
+data_path = os.path.abspath('data/전국_시군구_출생아수__합계출산율_20241119114124.csv')
 
-df_korea_birthrate.head()  # 데이터 출력하기
+if not os.path.exists(data_path):
+    raise FileNotFoundError(f"파일을 찾을 수 없습니다: {data_path}")
 
-# 필요한 열만 선택하기
-df_korea_birthrate = df_korea_birthrate[['11 서울특별시', '0.552']]
+# CSV 데이터 불러오기
+df_korea_birthrate = pd.read_csv(data_path, header=3, encoding='utf-8')
 
-# 열 이름 변경하기
+# 필요한 열만 선택
+df_korea_birthrate = df_korea_birthrate[['행정구역명', '출생률']]
 df_korea_birthrate.columns = ['행정구', '출생률']
 
-# 숫자를 제외하고 행정구 열의 값만 출력하기
-df_korea_birthrate['행정구'] = df_korea_birthrate['행정구'].str.replace('\d+', '', regex=True)
-
-# '행정구' 열의 공백 제거 및 데이터 타입 변환
-df_korea_birthrate['행정구'] = df_korea_birthrate['행정구'].str.strip().astype(str)
-
-# NaN 값 확인 및 처리
+# 데이터 정제
+df_korea_birthrate['행정구'] = df_korea_birthrate['행정구'].str.replace('\d+', '', regex=True).str.strip()
 df_korea_birthrate['출생률'] = df_korea_birthrate['출생률'].fillna(0)
 
-st.dataframe(df_korea_birthrate,height=200)
+st.dataframe(df_korea_birthrate, height=200)
 
-# 파일 경로 설정
-folder_path = r"data/"
-file_pattern = os.path.join(folder_path, "LARD_ADM_SECT_SGG_*.json")
-
-# 모든 파일을 불러와 GeoDataFrame으로 합치기
+# GeoJSON 파일 경로 설정
+folder_path = 'data/'
+file_pattern = os.path.join(folder_path, 'LARD_ADM_SECT_SGG_*.json')
 file_list = glob.glob(file_pattern)
+
+if not file_list:
+    raise FileNotFoundError(f"GeoJSON 파일을 찾을 수 없습니다: {file_pattern}")
+
+# GeoDataFrame 생성
 gdfs = [gpd.read_file(file) for file in file_list]
 gdf_korea_sido = gpd.GeoDataFrame(pd.concat(gdfs, ignore_index=True))
 
-gdf_korea_sido
-
-# 'SGG_NM' 열의 앞부분 단어 제거
+# 'SGG_NM' 정제
 gdf_korea_sido['행정구'] = gdf_korea_sido['SGG_NM'].str.split().str[1:].str.join(' ')
 
-# 결과 확인
-gdf_korea_sido.head()
+# 좌표계 변경
+korea_5179 = gdf_korea_sido.to_crs(epsg=5179)
 
-# 좌표계 변경하기
-korea_5179 = gdf_korea_sido.to_crs(epsg=5179, inplace=False)
+# 기본 지도 생성
+korea_map = folium.Map(location=[37, 126], zoom_start=7, tiles='cartodbpositron')
 
-korea_5179.plot(figsize=(10, 6))  # 데이터 plot하기
-
-# 기본 지도 생성하기
-korea_map = folium.Map(
-    location=[37, 126],
-    zoom_start=7,
-    tiles='cartodbpositron'  # 타일 레이어
-)
-
-# 제목 추가하기
-title = '전국 시군구 출생률'  # 타이틀
+# 제목 추가
+title = '전국 시군구 출생률'
 title_html = f'<h3 align="center" style="font-size:20px"><b>{title}</b></h3>'
 korea_map.get_root().html.add_child(folium.Element(title_html))
 
-# Choropleth map 그리기
+# Choropleth map
 folium.Choropleth(
-    geo_data=gdf_korea_sido,  # GeoJSON 파일
-    data=df_korea_birthrate,  # 데이터프레임
-    columns=['행정구', '출생률'],  # 열
-    key_on='feature.properties.행정구',  # key
-    fill_color='BuPu',  # 색상 Blue-Purple
-    fill_opacity=0.7,  # 투명도 조정
+    geo_data=gdf_korea_sido,
+    data=df_korea_birthrate,
+    columns=['행정구', '출생률'],
+    key_on='feature.properties.행정구',
+    fill_color='BuPu',
+    fill_opacity=0.7,
     line_opacity=0.3
 ).add_to(korea_map)
 
-# Streamlit 앱 설정
+# Streamlit 설정
 st.title('전국 시군구 출생률')
 st.markdown(title_html, unsafe_allow_html=True)
 
 # Folium 지도 출력
 folium_static(korea_map)
+
 
 # 사이드바
 st.header('🤖 사이드바')
