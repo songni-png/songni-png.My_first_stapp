@@ -7,7 +7,7 @@ import os
 import glob
 
 # 데이터 경로 설정
-data_path = os.path.abspath('data/전국_시군구_출생아수__합계출산율_20241119114124.csv')
+data_path = os.path.abspath('전국_시군구_출생아수__합계출산율_20241119114124.csv')
 
 if not os.path.exists(data_path):
     raise FileNotFoundError(f"파일을 찾을 수 없습니다: {data_path}")
