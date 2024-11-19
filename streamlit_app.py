@@ -7,7 +7,7 @@ import os
 import glob
 
 # 전국 시군구 출생률 데이터 불러오기
-df_korea_birthrate = pd.read_csv('data\전국_시군구_출생아수__합계출산율_20241119114124.csv', header=3, encoding='utf-8')
+df_korea_birthrate = pd.read_csv('data\전국_시군구_출생아수__합계출산율_20241119114124.csv', header=3, encoding='ansi')
 
 df_korea_birthrate.head()  # 데이터 출력하기
 
