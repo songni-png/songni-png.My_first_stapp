@@ -26,6 +26,8 @@ df_korea_birthrate['행정구'] = df_korea_birthrate['행정구'].str.strip().as
 # NaN 값 확인 및 처리
 df_korea_birthrate['출생률'] = df_korea_birthrate['출생률'].fillna(0)
 
+st.dataframe(df_korea_birthrate,height=200)
+
 # 파일 경로 설정
 folder_path = r"data/"
 file_pattern = os.path.join(folder_path, "LARD_ADM_SECT_SGG_*.json")
