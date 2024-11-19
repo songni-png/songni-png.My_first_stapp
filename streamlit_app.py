@@ -9,9 +9,6 @@ import glob
 # 데이터 경로 설정
 data_path = os.path.abspath('전국_시군구_출생아수__합계출산율_20241119114124.csv')
 
-if not os.path.exists(data_path):
-    raise FileNotFoundError(f"파일을 찾을 수 없습니다: {data_path}")
-
 # CSV 데이터 불러오기
 df_korea_birthrate = pd.read_csv(data_path, header=3, encoding='utf-8')
 
@@ -26,8 +23,7 @@ df_korea_birthrate['출생률'] = df_korea_birthrate['출생률'].fillna(0)
 st.dataframe(df_korea_birthrate, height=200)
 
 # GeoJSON 파일 경로 설정
-folder_path = 'data/'
-file_pattern = os.path.join(folder_path, 'LARD_ADM_SECT_SGG_*.json')
+file_pattern = os.path.join('LARD_ADM_SECT_SGG_*.json')
 file_list = glob.glob(file_pattern)
 
 if not file_list:
