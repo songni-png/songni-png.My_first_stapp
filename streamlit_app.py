@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
-from streamlit_folium import folium_static
-import folium
+
 import geopandas as gpd
 import os
 import glob
