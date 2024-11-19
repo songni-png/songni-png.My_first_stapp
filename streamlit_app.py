@@ -1,27 +1,14 @@
 import streamlit as st
 import streamlit.components.v1 as components
-import os
-
-# 절대 경로 설정
-file_path = os.path.abspath('data/korea_map.html')
-
-# 파일 경로 출력 (디버깅용)
-st.write(f"File path: {file_path}")
 
 # Streamlit 앱 설정
 st.title('전국 시군구 출생률')
 
 # HTML 파일 읽기
-try:
-    with open(file_path, 'r', encoding='utf-8') as f:
-        html_content = f.read()
+with open('data/korea_map.html', 'r', encoding='utf-8') as f:
+    html_content = f.read()
 
-    # HTML 파일 임베드
-    components.html(html_content, height=600)
-except FileNotFoundError:
-    st.error("파일을 찾을 수 없습니다. 파일 경로를 확인해주세요.")
-
-
+components.html(html_content,height=600)
 
 
 '# 이것은 제목입니다. : Magic 명령어'
