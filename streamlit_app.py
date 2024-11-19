@@ -4,8 +4,19 @@ import folium
 from streamlit_folium import folium_static
 import geopandas as gpd
 
-# 데이터프레임 불러오기 (인코딩 문제 해결)
-df_korea_birthrate = pd.read_csv('data/전국_시군구_합계출산율__모의_연령별_출산율_20241116181155.csv', header=3, encoding='utf-8')
+#  전국 시군구 출생률 데이터 불러오기
+df_korea_birthrate = pd.read_csv('data/전국_시군구_출생아수__합계출산율_20241119114124.csv',header=3,encoding='utf-8')
+
+df_korea_birthrate.head() # 데이터 출력하기
+
+# 필요한 열만 선택하기
+df_korea_birthrate = df_korea_birthrate[['11 서울특별시','0.552']]
+
+# 열 이름 변경하기
+df_korea_birthrate.columns = ['행정구', '출생률']
+
+# 숫자를 제외하고 행정구 열의 값만 출력하기
+df_korea_birthrate['행정구'] = df_korea_birthrate['행정구'].str.replace('\d+', '', regex=True)
 
 # '행정구' 열의 공백 제거 및 데이터 타입 변환
 df_korea_birthrate['행정구'] = df_korea_birthrate['행정구'].str.strip().astype(str)
@@ -13,8 +24,27 @@ df_korea_birthrate['행정구'] = df_korea_birthrate['행정구'].str.strip().as
 # NaN 값 확인 및 처리
 df_korea_birthrate['출생률'] = df_korea_birthrate['출생률'].fillna(0)
 
-# GeoJSON 파일 불러오기
-gdf_korea_sido = gpd.read_file('data/your_geojson_file.geojson', encoding='euc-kr')
+# 파일 경로 설정
+folder_path = r"data/"
+file_pattern = os.path.join(folder_path, "LARD_ADM_SECT_SGG_*.json")
+
+# 모든 파일을 불러와 GeoDataFrame으로 합치기
+file_list = glob.glob(file_pattern)
+gdfs = [gpd.read_file(file) for file in file_list]
+gdf_korea_sido = gpd.GeoDataFrame(pd.concat(gdfs, ignore_index=True))
+
+gdf_korea_sido
+
+# 'SGG_NM' 열의 앞부분 단어 제거
+gdf_korea_sido['행정구'] = gdf_korea_sido['SGG_NM'].str.split().str[1:].str.join(' ')
+
+# 결과 확인
+gdf_korea_sido.head()
+
+# 좌표계변경하기
+korea_5179 = gdf_korea_sido.to_crs(epsg=5179, inplace=False)
+
+korea_5179.plot(figsize=(10,6)); # 데이터 plot하기
 
 # 기본 지도 생성하기
 korea_map = folium.Map(
@@ -45,15 +75,6 @@ st.markdown(title_html, unsafe_allow_html=True)
 
 # Folium 지도 출력
 folium_static(korea_map)
-
-
-'# 이것은 제목입니다. : Magic 명령어'
-st.write('# 이것은 제목입니다. : st.write()')
-st.title('이것은 제목입니다. : st.title()')
-st.header('이것은 헤더입니다. : st.header()')
-st.subheader('이것은 서브헤더입니다. : st.subheader()')
-st.text('## 이것은 텍스트입니다. : st.text()')
-st.markdown('## 이것은 마크다운입니다. : st.markdown()')
 
 # 사이드바
 st.header('🤖 사이드바')
