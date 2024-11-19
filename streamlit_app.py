@@ -1,7 +1,15 @@
 import streamlit as st
+import streamlit.components.v1 as components
 
 # 텍스트
 st.header('전국 시군구 출생률 👼🏻')
+
+with open('data/korea_map.html',r,encoding='utf-8') as f:
+    html_content = f.read()
+
+# HTML 파일 임베드
+components.html(html_content, height=600)
+
 
 '# 이것은 제목입니다. : Magic 명령어'
 st.write('# 이것은 제목입니다. : st.write()')
