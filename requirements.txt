@@ -3,6 +3,6 @@ pandas
 geopandas
 folium
 geopandas
-streamlit-folium
+folium_static
 os
 glob
