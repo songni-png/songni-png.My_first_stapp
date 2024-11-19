@@ -3,14 +3,16 @@ import pandas as pd
 import folium
 from streamlit_folium import folium_static
 import geopandas as gpd
+import os
+import glob
 
-#  전국 시군구 출생률 데이터 불러오기
-df_korea_birthrate = pd.read_csv('data/전국_시군구_출생아수__합계출산율_20241119114124.csv',header=3,encoding='utf-8')
+# 전국 시군구 출생률 데이터 불러오기
+df_korea_birthrate = pd.read_csv('data/전국_시군구_출생아수__합계출산율_20241119114124.csv', header=3, encoding='utf-8')
 
-df_korea_birthrate.head() # 데이터 출력하기
+df_korea_birthrate.head()  # 데이터 출력하기
 
 # 필요한 열만 선택하기
-df_korea_birthrate = df_korea_birthrate[['11 서울특별시','0.552']]
+df_korea_birthrate = df_korea_birthrate[['11 서울특별시', '0.552']]
 
 # 열 이름 변경하기
 df_korea_birthrate.columns = ['행정구', '출생률']
@@ -41,10 +43,10 @@ gdf_korea_sido['행정구'] = gdf_korea_sido['SGG_NM'].str.split().str[1:].str.j
 # 결과 확인
 gdf_korea_sido.head()
 
-# 좌표계변경하기
+# 좌표계 변경하기
 korea_5179 = gdf_korea_sido.to_crs(epsg=5179, inplace=False)
 
-korea_5179.plot(figsize=(10,6)); # 데이터 plot하기
+korea_5179.plot(figsize=(10, 6))  # 데이터 plot하기
 
 # 기본 지도 생성하기
 korea_map = folium.Map(
@@ -74,7 +76,7 @@ st.title('전국 시군구 출생률')
 st.markdown(title_html, unsafe_allow_html=True)
 
 # Folium 지도 출력
-folium_static(korea_map)
+folium_static(korea_map
 
 # 사이드바
 st.header('🤖 사이드바')
