@@ -1,2 +1,8 @@
 streamlit
 pandas
+geopandas
+folium
+geopandas
+streamlit-folium
+os
+glob
