@@ -76,7 +76,7 @@ st.title('전국 시군구 출생률')
 st.markdown(title_html, unsafe_allow_html=True)
 
 # Folium 지도 출력
-folium_static(korea_map
+folium_static(korea_map)
 
 # 사이드바
 st.header('🤖 사이드바')
