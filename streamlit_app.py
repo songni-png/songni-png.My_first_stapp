@@ -16,7 +16,7 @@ if not os.path.exists(data_path):
 df_korea_birthrate = pd.read_csv(data_path, header=3, encoding='utf-8')
 
 # 필요한 열만 선택
-df_korea_birthrate = df_korea_birthrate[['A 시군구별', 'Y2023 2023']]
+df_korea_birthrate = df_korea_birthrate[['11 서울특뵬시', '0.552']]
 df_korea_birthrate.columns = ['행정구', '출생률']
 
 # 데이터 정제
