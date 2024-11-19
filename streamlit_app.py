@@ -4,7 +4,7 @@ import streamlit.components.v1 as components
 # 텍스트
 st.header('전국 시군구 출생률 👼🏻')
 
-with open('data/korea_map.html',r,encoding='utf-8') as f:
+with open('data/korea_map.html','r',encoding='utf-8') as f:
     html_content = f.read()
 
 # HTML 파일 임베드
