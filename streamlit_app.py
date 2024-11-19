@@ -42,6 +42,8 @@ korea_5179 = gdf_korea_sido.to_crs(epsg=5179)
 # 기본 지도 생성
 korea_map = folium.Map(location=[37, 126], zoom_start=7, tiles='cartodbpositron')
 
+# 제목 설정
+title = '전국 시군구 출생률'
 title_html = f'<h3 align="center" style="font-size:20px"><b>{title}</b></h3>'
 korea_map.get_root().html.add_child(folium.Element(title_html))
 
@@ -58,7 +60,6 @@ folium.Choropleth(
 ).add_to(korea_map)
 
 # Streamlit 설정
-st.title('전국 시군구 출생률')
 st.markdown(title_html, unsafe_allow_html=True)
 
 # Folium 지도 출력
