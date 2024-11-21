@@ -40,12 +40,7 @@ gdf_korea_sido['행정구'] = gdf_korea_sido['SGG_NM'].str.split().str[1:].str.j
 # 좌표계 변경
 korea_5179 = gdf_korea_sido.to_crs(epsg=5179)
 
-# GeoDataFrame 시각화
-fig, ax = plt.subplots(figsize=(10, 6))
-korea_map.plot(ax=ax)
 
-# Streamlit에 Matplotlib 플롯 표시
-st.pyplot(fig)
 # 기본 지도 생성
 korea_map = folium.Map(location=[37, 126], zoom_start=7, tiles='cartodbpositron')
 
