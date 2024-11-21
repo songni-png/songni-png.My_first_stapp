@@ -20,7 +20,7 @@ df_korea_birthrate.columns = ['행정구', '출생률']
 df_korea_birthrate['행정구'] = df_korea_birthrate['행정구'].str.replace('\d+', '', regex=True).str.strip()
 df_korea_birthrate['출생률'] = df_korea_birthrate['출생률'].fillna(0)
 
-st.geopandas(df_korea_birthrate, height=200)
+st.dataframe(df_korea_birthrate, height=200)
 
 # GeoJSON 파일 경로 설정
 file_pattern = os.path.join('LARD_ADM_SECT_SGG_*.json')
@@ -40,7 +40,7 @@ gdf_korea_sido['행정구'] = gdf_korea_sido['SGG_NM'].str.split().str[1:].str.j
 korea_5179 = gdf_korea_sido.to_crs(epsg=5179)
 
 # 기본 지도 출력
-st.dataframe(korea_map)
+st.geopandas(korea_map)
 
 # 기본 지도 생성
 korea_map = folium.Map(location=[37, 126], zoom_start=7, tiles='cartodbpositron')
