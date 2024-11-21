@@ -39,11 +39,11 @@ gdf_korea_sido['행정구'] = gdf_korea_sido['SGG_NM'].str.split().str[1:].str.j
 # 좌표계 변경
 korea_5179 = gdf_korea_sido.to_crs(epsg=5179)
 
+# 기본 지도 출력
+st.dataframe(korea_map)
+
 # 기본 지도 생성
 korea_map = folium.Map(location=[37, 126], zoom_start=7, tiles='cartodbpositron')
-
-# 기본 지도 출력
-korea_map
 
 # 제목 설정
 title = '전국 시군구 출생률'
