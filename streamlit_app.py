@@ -21,6 +21,12 @@ df_korea_birthrate['행정구'] = df_korea_birthrate['행정구'].str.replace('\
 df_korea_birthrate['출생률'] = df_korea_birthrate['출생률'].fillna(0)
 
 st.dataframe(df_korea_birthrate, height=200)
+for file in file_list:
+    try:
+        gdf = gpd.read_file(file)
+        print(f"Successfully read {file}")
+    except Exception as e:
+        print(f"Error reading {file}: {e}")
 
 # GeoJSON 파일 경로 설정
 file_pattern = os.path.join('LARD', 'LARD_ADM_SECT_SGG_*.json')
