@@ -24,23 +24,16 @@ st.dataframe(df_korea_birthrate, height=200)
 
 
 # GeoJSON 파일 경로 설정
-file_pattern = os.path.join('LARD', 'LARD_ADM_SECT_SGG_*.json')
+file_pattern = os.path.join('LARD_ADM_SECT_SGG_*.json')
 file_list = glob.glob(file_pattern)
 
-# GeoDataFrame 리스트 생성
-gdfs = []
-for file in file_list:
-    try:
-        gdf = gpd.read_file(file)
-        gdfs.append(gdf)
-    except Exception as e:
-        print(f"Error reading {file}: {e}")
+if not file_list:
+    raise FileNotFoundError(f"GeoJSON 파일을 찾을 수 없습니다: {file_pattern}")
 
-# GeoDataFrame 병합
-if gdfs:
-    gdf_korea_sido = gpd.GeoDataFrame(pd.concat(gdfs, ignore_index=True))
-else:
-    print("No valid GeoJSON files found.")
+# GeoDataFrame 생성
+gdfs = [gpd.read_file(file) for file in file_list]
+gdf_korea_sido = gpd.GeoDataFrame(pd.concat(gdfs, ignore_index=True))
+
 
 # 'SGG_NM' 정제
 gdf_korea_sido['행정구'] = gdf_korea_sido['SGG_NM'].str.split().str[1:].str.join(' ')
