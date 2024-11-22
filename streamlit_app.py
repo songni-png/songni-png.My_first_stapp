@@ -22,7 +22,6 @@ df_korea_birthrate['출생률'] = df_korea_birthrate['출생률'].fillna(0)
 
 st.dataframe(df_korea_birthrate, height=200)
 
-import fiona
 
 # GeoJSON 파일 경로 설정
 file_pattern = os.path.join('LARD', 'LARD_ADM_SECT_SGG_*.json')
@@ -32,9 +31,8 @@ file_list = glob.glob(file_pattern)
 gdfs = []
 for file in file_list:
     try:
-        with fiona.open(file) as src:
-            gdf = gpd.read_file(src)
-            gdfs.append(gdf)
+        gdf = gpd.read_file(file)
+        gdfs.append(gdf)
     except Exception as e:
         print(f"Error reading {file}: {e}")
 
