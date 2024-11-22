@@ -23,7 +23,7 @@ df_korea_birthrate['출생률'] = df_korea_birthrate['출생률'].fillna(0)
 st.dataframe(df_korea_birthrate, height=200)
 
 # GeoJSON 파일 경로 설정
-file_pattern = os.path.join('LARD_ADM_SECT_SGG_*.json')
+file_pattern = os.path.join('LARD/LARD_ADM_SECT_SGG_*.json')
 file_list = glob.glob(file_pattern)
 
 if not file_list:
