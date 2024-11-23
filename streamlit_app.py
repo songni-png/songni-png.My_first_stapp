@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import folium
 from streamlit_folium import folium_static
+import matplotlib.pyplot as plt
 import geopandas as gpd
 import os
 import glob
@@ -39,14 +40,15 @@ gdf_korea_sido['행정구'] = gdf_korea_sido['SGG_NM'].str.split().str[1:].str.j
 # 좌표계 변경
 korea_5179 = gdf_korea_sido.to_crs(epsg=5179)
 
-# Folium 지도 생성
-m = folium.Map(location=[37.5665, 126.9780], zoom_start=10)
+# 좌표계 변경
+korea_5179 = gdf_korea_sido.to_crs(epsg=5179)
 
-# GeoDataFrame을 Folium에 추가
-folium.GeoJson(korea_5179).add_to(m)
+# Matplotlib을 사용하여 지도 시각화
+fig, ax = plt.subplots(figsize=(10, 6))
+korea_5179.plot(ax=ax, edgecolor='k')
 
-# Streamlit에 Folium 지도 표시
-folium_static(m)
+# Streamlit에 Matplotlib 플롯 표시
+st.pyplot(fig)
 
 # 기본 지도 생성
 korea_map = folium.Map(location=[37, 126], zoom_start=7, tiles='cartodbpositron')
