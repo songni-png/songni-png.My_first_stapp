@@ -58,7 +58,10 @@ korea_map.get_root().html.add_child(folium.Element(title_html))
 
 # Choropleth map
 folium.Choropleth(
- 율',
+    geo_data=gdf_korea_sido,  
+    data=df_korea_birthrate, 
+    columns=['행정구', '출생률'], 
+    key_on='feature.properties.행정구',
     fill_color='BuPu',
     fill_opacity=0.7,
     line_opacity=0.3
