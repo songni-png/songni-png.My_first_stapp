@@ -39,6 +39,14 @@ gdf_korea_sido['행정구'] = gdf_korea_sido['SGG_NM'].str.split().str[1:].str.j
 # 좌표계 변경
 korea_5179 = gdf_korea_sido.to_crs(epsg=5179)
 
+# Folium 지도 생성
+m = folium.Map(location=[37.5665, 126.9780], zoom_start=10)
+
+# GeoDataFrame을 Folium에 추가
+folium.GeoJson(korea_5179).add_to(m)
+
+# Streamlit에 Folium 지도 표시
+folium_static(m)
 
 # 기본 지도 생성
 korea_map = folium.Map(location=[37, 126], zoom_start=7, tiles='cartodbpositron')
