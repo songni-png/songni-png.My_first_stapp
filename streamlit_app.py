@@ -14,11 +14,11 @@ df_korea_birthrate = pd.read_csv(data_path, header=3, encoding='utf-8')
 
 # 필요한 열만 선택
 df_korea_birthrate = df_korea_birthrate[['11 서울특별시', '0.552']]
-df_korea_birthrate.columns = ['행정구', '출산율']
+df_korea_birthrate.columns = ['행정구', '출생률']
 
 # 데이터 정제
 df_korea_birthrate['행정구'] = df_korea_birthrate['행정구'].str.replace('\d+', '', regex=True).str.strip()
-df_korea_birthrate['출산율'] = df_korea_birthrate['출산율'].fillna(0)
+df_korea_birthrate['출생률'] = df_korea_birthrate['출생률'].fillna(0)
 
 st.dataframe(df_korea_birthrate, height=200)
 
@@ -44,7 +44,7 @@ korea_5179 = gdf_korea_sido.to_crs(epsg=5179)
 korea_map = folium.Map(location=[37, 126], zoom_start=7, tiles='cartodbpositron')
 
 # 제목 설정
-title = '전국 시군구 합계출산율'
+title = '전국 시군구 출생률'
 title_html = f'<h3 align="center" style="font-size:20px"><b>{title}</b></h3>'
 korea_map.get_root().html.add_child(folium.Element(title_html))
 
